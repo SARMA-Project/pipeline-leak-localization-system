@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-steel-50 text-steel-900 antialiased font-sans;
+  }
+}
+
+@layer components {
+  /* Premium Glassmorphism Cards */
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-xl border border-white/50 shadow-glass rounded-xl;
+  }
+
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-lg border border-steel-200 shadow-sm rounded-lg hover:shadow-glass-hover transition-shadow duration-300;
+  }
+
+  /* Status Badges */
+  .badge-healthy {
+    @apply bg-brand-secondary/10 text-brand-secondary border border-brand-secondary/20 px-2 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+  }
+  
+  .badge-warning {
+    @apply bg-brand-warning/10 text-brand-warning border border-brand-warning/20 px-2 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+  }
+
+  .badge-danger {
+    @apply bg-brand-danger/10 text-brand-danger border border-brand-danger/20 px-2 py-1 rounded-full text-xs font-bold uppercase tracking-wider animate-pulse;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply bg-brand-primary text-white font-semibold py-2 px-4 rounded-lg hover:bg-brand-primary/90 transition-colors shadow-sm;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-steel-700 border border-steel-200 font-semibold py-2 px-4 rounded-lg hover:bg-steel-50 transition-colors shadow-sm;
+  }
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Leaflet Map overrides for light premium theme */
+.leaflet-container {
+  background: #f8f9fa !important;
+  font-family: inherit !important;
+}
+.industrial-popup .leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  color: #1e293b !important;
+  border-radius: 12px;
+}
+.industrial-popup .leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Hide default leaflet controls if custom ones are built */
+.leaflet-control-attribution {
+  background: rgba(255,255,255,0.7) !important;
+  backdrop-filter: blur(4px);
+  color: #64748b !important;
+}
