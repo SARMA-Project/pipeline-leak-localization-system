@@ -1,10 +1,10 @@
 # 📡 Firmware & IoT Hardware Architecture
 
-This directory contains the C++/Arduino firmware for the **Leak Busters SCADA** hardware layer.
+This directory contains the production C++/Arduino firmware for the **Leak Busters SCADA** physical hardware layer.
 
 ---
 
-## 🏗️ Hardware System Architecture
+## 🏗️ Core IoT Hardware System Architecture
 
 ```
 +------------------------+             +------------------------+
@@ -12,7 +12,7 @@ This directory contains the C++/Arduino firmware for the **Leak Busters SCADA** 
 | (Pressure + Acoustic)  |             | (Pressure + Acoustic)  |
 +-----------+------------+             +-----------+------------+
             |                                      |
-            | LoRa (868 MHz)                       | LoRa (868 MHz)
+            | LoRa Wireless (868 MHz)              | LoRa Wireless (868 MHz)
             +------------------+-------------------+
                                |
                                v
@@ -21,12 +21,8 @@ This directory contains the C++/Arduino firmware for the **Leak Busters SCADA** 
                    |  (TDOA AI Engine)     |
                    +-----------+-----------+
                                |
-                 +-------------+-------------+
-                 |                           |
-                 v                           v
-     Serial JSON / WebSockets        Firebase Realtime DB
-                 |                           |
-                 +-------------+-------------+
+                               v
+                   Firebase Realtime Database
                                |
                                v
                    +-----------------------+
@@ -57,9 +53,10 @@ This directory contains the C++/Arduino firmware for the **Leak Busters SCADA** 
 
 ### 2. ESP32 Master Gateway (`ESP32_LoRa_Master_Gateway.ino`)
 
-- **LoRa SPI Module**: Same pinout (SCK: 18, MISO: 19, MOSI: 23, SS: 5).
-- **Wi-Fi**: Connects to local router or mobile hotspot.
+- **LoRa SPI Module**: Same SPI pinout (SCK: 18, MISO: 19, MOSI: 23, SS: 5).
+- **Wi-Fi Module**: Connects to local gateway router / mobile hotspot.
 - **TDOA Processing Engine**: Computes time difference of acoustic transients $\Delta t = t_5 - t_4$ using microsecond resolution (`micros()`).
+- **Firebase Realtime DB Connector**: Uploads structured JSON payloads to `pipeline-monitoring/telemetry`.
 
 ---
 
@@ -75,10 +72,4 @@ Where:
 - $c$ = Acoustic wave velocity in gas ($343\text{ m/s}$)
 - $\Delta t$ = Time difference of acoustic pulse arrival at Node 4 vs Node 5 (seconds)
 
-Experimental Boundary: **$\pm 0.04\text{ m} \ (\pm 4\text{ cm})$** uncertainty tolerance filter applied to raw sensor measurements.
-
----
-
-## 📱 Note on Mobile Handheld Remote Controller (`remote-server.js`)
-
-The mobile handheld remote controller included in the repository serves as an **Operator Remote Control & Demo Simulation Module**. During physical testing or live demonstrations, if physical sensors are undergoing calibration, the mobile remote interface pushes simulated physical telemetry over HTTP/WebSockets directly to the SCADA dashboard to demonstrate system interlocks and real-time step response graphics.
+Experimental Uncertainty Boundary: **$\pm 0.04\text{ m} \ (\pm 4\text{ cm})$** error margin filter applied to physical acoustic transients.

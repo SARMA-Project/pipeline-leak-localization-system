@@ -9,18 +9,46 @@ An advanced, real-time industrial **IoT SCADA System & Digital Twin** for gas tr
 
 ---
 
-## 📌 Architecture & System Features
+## 🏗️ Core IoT & SCADA Architecture
 
-- ⚡ **Core IoT Hardware Layer (`firmware/`)**:
-  - **ESP32 Edge Sensor Nodes (Node 4 & Node 5)**: Real-time sampling of pressure transients, acoustic wave peaks, and pipe temperature.
-  - **SX1276 / SX1278 LoRa Mesh (868 MHz)**: High-speed, long-range wireless telemetry transmission between edge nodes and gateway.
-  - **ESP32 Master Gateway**: Computes microsecond-precision Time Difference of Arrival (TDOA) localization and streams JSON telemetry to Firebase / Serial.
+```
++------------------------+             +------------------------+
+|   ESP32 Slave Node 4   |             |   ESP32 Slave Node 5   |
+| (Pressure + Acoustic)  |             | (Pressure + Acoustic)  |
++-----------+------------+             +-----------+------------+
+            |                                      |
+            | LoRa Wireless (868 MHz)              | LoRa Wireless (868 MHz)
+            +------------------+-------------------+
+                               |
+                               v
+                   +-----------------------+
+                   |  ESP32 Master Gateway |
+                   |  (TDOA AI Engine)     |
+                   +-----------+-----------+
+                               |
+                               v
+                   Firebase Realtime Database
+                               |
+                               v
+                   +-----------------------+
+                   |   Leak Busters SCADA  |
+                   |   React Dashboard     |
+                   +-----------------------+
+```
+
+---
+
+## 📌 System Features
+
+- ⚡ **Core Hardware Layer (`firmware/`)**:
+  - **ESP32 Edge Sensor Nodes (Node 4 & Node 5)**: High-speed ADC sampling of pressure transients, acoustic wave peaks, and pipe temperature.
+  - **SX1276 / SX1278 LoRa Transceivers (868 MHz)**: Wireless long-range communication between edge nodes and gateway.
+  - **ESP32 Master Gateway**: Computes microsecond-resolution Time Difference of Arrival (TDOA) localization and streams telemetry to Firebase.
 - 🛰️ **20-Node Physical Pipeline Digital Twin**: Animated virtual physics modeling real-time pressure gradients, fluid particle flow, gas jet escape plumes, and communication waves.
 - 🎯 **AI TDOA Leak Localization**: Precise localization within a **±0.04 m (±4 cm)** experimental tolerance boundary between Node 4 and Node 5.
 - 📈 **Multi-Sensor Time-Series Analytics**: Stacked real-time visualization of Pressure Dynamics (bar), Acoustic Waveform Intensity (dB), and Joule-Thomson Temperature Cooling (°C).
 - 🗺️ **Interactive GIS Pipeline Map**: Satellite map with pan, zoom, quick node focus, and real-time alert markers.
 - 🚨 **Emergency SOP & Automated Interlock**: One-click Emergency Shutdown for upstream valve (V-104) isolation.
-- 📱 **Operator Handheld Remote Control Bridge**: Lightweight HTTP Node server (`remote-server.js`) on port 3001 allowing manual operator overrides and simulation testing during hardware maintenance.
 - 📊 **Data Export**: Export sensor analytics to Excel/CSV for compliance logging.
 
 ---
@@ -54,12 +82,10 @@ pipeline-leak-localization-system/
 │   │   ├── DigitalTwin.jsx                # Animated Pipeline Physics Twin
 │   │   ├── Analytics.jsx                  # Stacked Time-Series Charts
 │   │   ├── LiveMap.jsx                    # Leaflet GIS Satellite Map
-│   │   ├── EmergencyResponse.jsx          # Emergency SOP & Valve Shutdown
-│   │   └── MobileRemote.jsx               # Handheld Remote UI
+│   │   └── EmergencyResponse.jsx          # Emergency SOP & Valve Shutdown
 │   ├── utils/                             # Telemetry Generators & Math Helpers
 │   ├── App.jsx                            # Router setup
 │   └── main.jsx                           # Entry point
-├── remote-server.js                       # HTTP Remote Control & Telemetry Bridge
 ├── vite.config.js                         # Vite configuration
 └── package.json
 ```
@@ -89,28 +115,11 @@ pipeline-leak-localization-system/
    - Flash `firmware/ESP32_LoRa_Slave_Sensor_Node.ino` to Node 4 and Node 5 ESP32 boards.
    - Flash `firmware/ESP32_LoRa_Master_Gateway.ino` to Master Gateway ESP32 board.
 
----
-
-## 🏃 Running the SCADA Web Application
-
-Launch **two concurrent terminal tasks**:
-
-### Terminal 1: Mobile Remote & Telemetry Bridge (Port 3001)
-```bash
-node remote-server.js
-```
-
-### Terminal 2: SCADA Web Application (Port 5173)
-```bash
-npm run dev
-```
-
----
-
-## 🌐 Accessing the Dashboards
-
-- 💻 **Laptop SCADA Display (Control Room)**: `http://localhost:5173/`
-- 📱 **Mobile Handheld Remote Controller**: `http://<YOUR_LAPTOP_IP>:5173/remote`
+4. Run the SCADA Dashboard:
+   ```bash
+   npm run dev
+   ```
+   Access at `http://localhost:5173/`
 
 ---
 

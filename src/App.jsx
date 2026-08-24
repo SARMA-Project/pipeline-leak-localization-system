@@ -14,7 +14,6 @@ import { EmergencyResponse } from './pages/EmergencyResponse';
 import { OperatorPanel } from './pages/OperatorPanel';
 import { Settings } from './pages/Settings';
 import { AIAssistant } from './pages/AIAssistant';
-import { MobileRemote } from './pages/MobileRemote';
 
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/remote" element={<MobileRemote />} />
           
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
